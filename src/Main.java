@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-            File file = new File("C:\\Users\\suatc\\IdeaProjects\\Annie_thomson_Proj1\\src\\test2.pas");
+            File file = new File("src/test1.pas");
             LexicalAnalyzer la = new LexicalAnalyzer(file);
             la.output();
 
