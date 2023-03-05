@@ -1,6 +1,4 @@
-import org.w3c.dom.ls.LSOutput;
-
-import java.io.File;  // Import the File class
+import java.io.File;  // Import the neccesary libraries
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +7,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LexicalAnalyzer {
-    List<String> lines = new ArrayList<String>();
+    
+	List<String> lines = new ArrayList<String>();   //needed ArrayList and variables
     int currentLine;
     int currentLocation;
 
+    // LexicalAnalyzer constructor to read file and add lines to 
     public LexicalAnalyzer(File file) throws FileNotFoundException {
         currentLine = 0;
         currentLocation = 0;
@@ -20,13 +20,12 @@ public class LexicalAnalyzer {
         Scanner scanner = new Scanner(file);
         while(scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            //System.out.println("added line: "+ line);
             lines.add(line);
         }
         scanner.close();
     }
 
-    //return
+    //return the next token 
     public Token getNextToken(){
         String line = lines.get(currentLine);
         String lexeme = findNextToken(line);
@@ -35,9 +34,8 @@ public class LexicalAnalyzer {
         return token;
     }
 
-    //return next lexeme
+    //return next lexeme according to the different string types
     public String findNextToken(String line){
-        //System.out.println("findNextToken()   = "+ line);
         String token = "";
 
         while(true) {
@@ -48,9 +46,7 @@ public class LexicalAnalyzer {
             if (currentLocation < line.length() - 1) {
                 next_letter = line.substring(currentLocation + 1, currentLocation + 2);
             }
-            //System.out.println("======"+token+", " +letter+", "+next_letter);
-
-            //go next line
+            //go to next character  
             if(next_letter.equals("null")){
                 currentLocation = 0;
                 currentLine++;
@@ -66,7 +62,8 @@ public class LexicalAnalyzer {
                     letter.equals("(")||
                     letter.equals(")")||
                     letter.equals(",")||
-                    letter.equals(";")){
+                    letter.equals(";")
+                    ){
                 currentLocation++;
                 return letter;
             }else if (letter.equals("&")){
@@ -76,7 +73,8 @@ public class LexicalAnalyzer {
                     return letter+next_letter;
                 }
                 return letter;
-            }else if (letter.equals("|")){
+            }
+            else if (letter.equals("|")){
                 currentLocation++;
                 if(next_letter.equals("|")){
                     currentLocation++;
@@ -151,6 +149,7 @@ public class LexicalAnalyzer {
                     next_letter.equals(">")||
                     next_letter.equals("&")||
                     next_letter.equals("!")
+       
             ){
                 currentLocation++;
                 return token+letter;
@@ -159,7 +158,9 @@ public class LexicalAnalyzer {
             currentLocation++;
             token = token + letter;
 
-        }
+            }
+            
+        
 
     }
 
@@ -169,11 +170,11 @@ public class LexicalAnalyzer {
         TokenCodes token = TokenCodes.NULL;
 
         if(lexeme.equals(" ")){
-            token = TokenCodes.NAL;
+            token = TokenCodes.NOTALEX;
         }else if(lexeme.equals("&")){
-            token = TokenCodes.NAL;
+            token = TokenCodes.NOTALEX;
         }else if(lexeme.equals("|")){
-            token = TokenCodes.NAL;
+            token = TokenCodes.NOTALEX;
         }else if(lexeme.equals("+")){
             token = TokenCodes.PLUS;
         }else if(lexeme.equals("-")){
@@ -201,7 +202,7 @@ public class LexicalAnalyzer {
         }else if(lexeme.equals("!=")){
             token = TokenCodes.NEQ;
         }else if(lexeme.equals(":=")){
-            token = TokenCodes.BECOMES;
+            token = TokenCodes.ASSIGN_OP;
         }else if(lexeme.equals("<")){
             token = TokenCodes.LSS;
         }else if(lexeme.equals("<=")){
@@ -212,78 +213,84 @@ public class LexicalAnalyzer {
             token = TokenCodes.GEQ;
         }else if(lexeme.equals("&&")){
             token = TokenCodes.AND;
-        }else if(lexeme.equals("array")){
+        }else if(lexeme.equalsIgnoreCase("array")){
             token = TokenCodes.ARRAY;
-        }else if(lexeme.equals("begin")){
+        }else if(lexeme.equalsIgnoreCase("begin")){
             token = TokenCodes.BEGIN;
-        }else if(lexeme.equals("case")){
+        }else if(lexeme.equalsIgnoreCase("case")){
             token = TokenCodes.CASE;
-        }else if(lexeme.equals("const")){
+        }else if(lexeme.equalsIgnoreCase("const")){
             token = TokenCodes.CONST;
         }else if(lexeme.equals("%")){
             token = TokenCodes.DIV;
-        }else if(lexeme.equals("do")){
+        }else if(lexeme.equalsIgnoreCase("do")){
             token = TokenCodes.DO;
-        }else if(lexeme.equals("downto")){
+        }else if(lexeme.equalsIgnoreCase("downto")){
             token = TokenCodes.DOWNTO;
-        }else if(lexeme.equals("else")){
+        }else if(lexeme.equalsIgnoreCase("else")){
             token = TokenCodes.ELSE;
-        }else if(lexeme.equals("end")){
+        }else if(lexeme.equalsIgnoreCase("end")){
             token = TokenCodes.END;
-        }else if(lexeme.equals("file")){
+        }else if(lexeme.equalsIgnoreCase("file")){
             token = TokenCodes.FILE;
-        }else if(lexeme.equals("for")){
+        }else if(lexeme.equalsIgnoreCase("for")){
             token = TokenCodes.FOR;
-        }else if(lexeme.equals("function")){
+        }else if(lexeme.equalsIgnoreCase("function")){
             token = TokenCodes.FUNCTION;
-        }else if(lexeme.equals("goto")){
+        }else if(lexeme.equalsIgnoreCase("goto")){
             token = TokenCodes.GOTO;
-        }else if(lexeme.equals("if")){
+        }else if(lexeme.equalsIgnoreCase("if")){
             token = TokenCodes.IF;
-        }else if(lexeme.equals("in")){
+        }else if(lexeme.equalsIgnoreCase("in")){
             token = TokenCodes.IN;
-        }else if(lexeme.equals("label")){
+        }else if(lexeme.equalsIgnoreCase("label")){
             token = TokenCodes.LABEL;
-        }else if(lexeme.equals("mod")){
+        }else if(lexeme.equalsIgnoreCase("mod")){
             token = TokenCodes.MOD;
-        }else if(lexeme.equals("nil")){
+        }else if(lexeme.equalsIgnoreCase("nil")){
             token = TokenCodes.NIL;
-        }else if(lexeme.equals("not")){
+        }else if(lexeme.equalsIgnoreCase("not")){
             token = TokenCodes.NOT;
-        }else if(lexeme.equals("of")){
+        }else if(lexeme.equalsIgnoreCase("of")){
             token = TokenCodes.OF;
-        }else if(lexeme.equals("||")){
+        }else if(lexeme.equalsIgnoreCase("||")){
             token = TokenCodes.OR;
-        }else if(lexeme.equals("packed")){
+        }else if(lexeme.equalsIgnoreCase("packed")){
             token = TokenCodes.PACKED;
-        }else if(lexeme.equals("procedure")){
+        }else if(lexeme.equalsIgnoreCase("procedure")){
             token = TokenCodes.PROCEDURE;
-        }else if(lexeme.equals("program")){
+        }else if(lexeme.equalsIgnoreCase("program")){
             token = TokenCodes.PROGRAM;
-        }else if(lexeme.equals("record")){
+        }else if(lexeme.equalsIgnoreCase("record")){
             token = TokenCodes.RECORD;
-        }else if(lexeme.equals("repeat")){
+        }else if(lexeme.equalsIgnoreCase("repeat")){
             token = TokenCodes.REPEAT;
-        }else if(lexeme.equals("set")){
+        }else if(lexeme.equalsIgnoreCase("set")){
             token = TokenCodes.SET;
-        }else if(lexeme.equals("then")){
+        }else if(lexeme.equalsIgnoreCase("then")){
             token = TokenCodes.THEN;
-        }else if(lexeme.equals("to")){
+        }else if(lexeme.equalsIgnoreCase("to")){
             token = TokenCodes.TO;
-        }else if(lexeme.equals("type")){
+        }else if(lexeme.equalsIgnoreCase("type")){
             token = TokenCodes.TYPE;
-        }else if(lexeme.equals("until")){
+        }else if(lexeme.equalsIgnoreCase("until")){
             token = TokenCodes.UNTIL;
-        }else if(lexeme.equals("var")){
+        }else if(lexeme.equalsIgnoreCase("var")){
             token = TokenCodes.VAR;
-        }else if(lexeme.equals("while")){
+        }else if(lexeme.equalsIgnoreCase("while")){
             token = TokenCodes.WHILE;
-        }else if(lexeme.equals("with")){
+        }else if(lexeme.equalsIgnoreCase("with")){
             token = TokenCodes.WITH;
-        }else if(isInteger(lexeme)){
+        }else if(lexeme.equalsIgnoreCase("write")) {
+        	token = TokenCodes.WRITESYM;
+        }else if(lexeme.equalsIgnoreCase("integer")){
+        	token = TokenCodes.INTSYM;
+        }else if(lexeme.equalsIgnoreCase("read")){
+        	token = TokenCodes.READSYM;
+        } else if(isInteger(lexeme)){
             token = TokenCodes.NUMLIT;
-        } else if(isUnknown(lexeme)) {
-            token = TokenCodes.UNKNKOWN;
+        } else if(!isUnknown(lexeme)==false) {
+            token = TokenCodes.UNKNOWN;
         }else {
             token = TokenCodes.IDENT;
         }
@@ -295,24 +302,25 @@ public class LexicalAnalyzer {
     private boolean isUnknown(String lexeme) {
         String[] substrings = lexeme.split("");
         boolean isUnknown = false;
-
-        //lists that dont work weird, gotta add ur list, it doesnt cover all characters for some reason
-        Pattern letter = Pattern.compile("[a-zA-z]");
+        //list of acceptable characters turned into a various regex
+        Pattern letter = Pattern.compile("[A-za-z]");
         Pattern digit = Pattern.compile("[0-9]");
-        Pattern special = Pattern.compile ("[!#$%&*()_+=|<>?{}\\[\\]~-]");
-
+        Pattern special = Pattern.compile ("[-+*/:=,;.()[]={}`]]");
+		
+		//the characterized string is analyzed to see if it matches any of the regex values
         for(String ch: substrings){
             Matcher hasLetter = letter.matcher(ch);
             Matcher hasDigit = digit.matcher(ch);
             Matcher hasSpecial = special.matcher(ch);
-            if(hasLetter.find() || hasDigit.find() || hasSpecial.find()){ // if any is true, that means its a valid, iff all false that means its unknown
-                System.out.println(ch +" = "+hasLetter.find() + hasDigit.find() + hasSpecial.find());
-                isUnknown = true;
-            }
+            if(hasLetter.find() || hasDigit.find() || hasSpecial.find()){ 
+            // if any is true, that means its a valid, iff all false that means its unknown
+                isUnknown = false;
+            } //if it is valid, it is not an unknown
+            else  isUnknown = true;
         }
         return isUnknown;
     }
-
+    //checks to see if the string is an integer 
     public static boolean isInteger(String i) {
         try {
             Integer.parseInt(i);
@@ -324,6 +332,8 @@ public class LexicalAnalyzer {
         return true;
     }
 
+  /* Utilizes the print function of the Token class while traversing the ArrayList 
+  and prints the results  */
     public void output (){
 
         while (lines.size() != currentLine){
