@@ -302,7 +302,7 @@ public class LexicalAnalyzer {
     private boolean isUnknown(String lexeme) {
         String[] substrings = lexeme.split("");
         boolean isUnknown = false;
-        //list of acceptable characters turned into a various regex
+        //list of acceptable characters turned into  various regex
         Pattern letter = Pattern.compile("[A-za-z]");
         Pattern digit = Pattern.compile("[0-9]");
         Pattern special = Pattern.compile ("[-+*/:=,;.()[]={}`]]");
