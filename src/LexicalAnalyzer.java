@@ -287,6 +287,8 @@ public class LexicalAnalyzer {
         	token = TokenCodes.INTSYM;
         }else if(lexeme.equalsIgnoreCase("read")){
         	token = TokenCodes.READSYM;
+	}else if((lexeme.substring(lexeme.length()-1)).equals("\"")) {
+        	token = TokenCodes.STRING;
         } else if(isInteger(lexeme)){
             token = TokenCodes.NUMLIT;
         } else if(!isUnknown(lexeme)==false) {
