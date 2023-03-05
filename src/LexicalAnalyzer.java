@@ -298,7 +298,7 @@ public class LexicalAnalyzer {
     }
 
 
-    //return if any character is unknown
+    //return true if any character is unknown
     private boolean isUnknown(String lexeme) {
         String[] substrings = lexeme.split("");
         boolean isUnknown = false;
@@ -307,7 +307,7 @@ public class LexicalAnalyzer {
         Pattern digit = Pattern.compile("[0-9]");
         Pattern special = Pattern.compile ("[-+*/:=,;.()[]={}`]]");
 		
-		//the characterized string is analyzed to see if it matches any of the regex values
+    //the characterized string is analyzed to see if it matches any of the regex values
         for(String ch: substrings){
             Matcher hasLetter = letter.matcher(ch);
             Matcher hasDigit = digit.matcher(ch);
