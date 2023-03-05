@@ -282,7 +282,7 @@ public class LexicalAnalyzer {
             token = TokenCodes.WITH;
         }else if(isInteger(lexeme)){
             token = TokenCodes.NUMLIT;
-        } else if(!notUnknown(lexeme)) {
+        } else if(isUnknown(lexeme)) {
             token = TokenCodes.UNKNKOWN;
         }else {
             token = TokenCodes.IDENT;
@@ -290,17 +290,27 @@ public class LexicalAnalyzer {
         return token;
     }
 
-    private boolean notUnknown(String lexeme) {
 
+    //return if any character is unknown
+    private boolean isUnknown(String lexeme) {
+        String[] substrings = lexeme.split("");
+        boolean isUnknown = false;
+
+        //lists that dont work weird, gotta add ur list, it doesnt cover all characters for some reason
         Pattern letter = Pattern.compile("[a-zA-z]");
         Pattern digit = Pattern.compile("[0-9]");
-        Pattern special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]~-]");
+        Pattern special = Pattern.compile ("[!#$%&*()_+=|<>?{}\\[\\]~-]");
 
-        Matcher hasLetter = letter.matcher(lexeme);
-        Matcher hasDigit = digit.matcher(lexeme);
-        Matcher hasSpecial = special.matcher(lexeme);
-
-        return hasLetter.find() && hasDigit.find() && hasSpecial.find();
+        for(String ch: substrings){
+            Matcher hasLetter = letter.matcher(ch);
+            Matcher hasDigit = digit.matcher(ch);
+            Matcher hasSpecial = special.matcher(ch);
+            if(hasLetter.find() || hasDigit.find() || hasSpecial.find()){ // if any is true, that means its a valid, iff all false that means its unknown
+                System.out.println(ch +" = "+hasLetter.find() + hasDigit.find() + hasSpecial.find());
+                isUnknown = true;
+            }
+        }
+        return isUnknown;
     }
 
     public static boolean isInteger(String i) {

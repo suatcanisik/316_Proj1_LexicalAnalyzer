@@ -17,13 +17,15 @@ program
   Remainder == Remainder % 10;
   Remainder =  Remainder MOD 5;
   IF (Remainder = 0) THEN Write (“No money left”) ELSE Write (Remainder);
-  
+  ^^
   END. (*  ChangeMaker *)
   67567587
   wr6y
-  片
+  片^^
   s\dg
   wer
   sh
+  @
+  @@
   仮名
   片仮名
