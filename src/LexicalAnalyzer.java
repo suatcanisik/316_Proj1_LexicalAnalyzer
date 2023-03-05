@@ -5,9 +5,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LexicalAnalyzer {
-    List<String> lines = new ArrayList<String>();  ;
+    List<String> lines = new ArrayList<String>();
     int currentLine;
     int currentLocation;
 
@@ -49,7 +51,7 @@ public class LexicalAnalyzer {
             //System.out.println("======"+token+", " +letter+", "+next_letter);
 
             //go next line
-            if(next_letter == "null"){
+            if(next_letter.equals("null")){
                 currentLocation = 0;
                 currentLine++;
                 return token + letter;
@@ -59,7 +61,6 @@ public class LexicalAnalyzer {
                     letter.equals("+")||
                     letter.equals("-")||
                     letter.equals("*")||
-                    letter.equals("=")||
                     letter.equals(".")||
                     letter.equals("%")||
                     letter.equals("(")||
@@ -90,6 +91,13 @@ public class LexicalAnalyzer {
                 }
                 return letter;
             }else if (letter.equals(":")){
+                currentLocation++;
+                if(next_letter.equals("=")){
+                    currentLocation++;
+                    return letter+next_letter;
+                }
+                return letter;
+            }else if (letter.equals("=")){
                 currentLocation++;
                 if(next_letter.equals("=")){
                     currentLocation++;
@@ -176,6 +184,8 @@ public class LexicalAnalyzer {
             token = TokenCodes.SLASH;
         }else if(lexeme.equals("=")){
             token = TokenCodes.EQL;
+        }else if(lexeme.equals("==")){
+            token = TokenCodes.DEQL;
         }else if(lexeme.equals("(")){
             token = TokenCodes.LPAREN;
         }else if(lexeme.equals(")")){
@@ -272,13 +282,25 @@ public class LexicalAnalyzer {
             token = TokenCodes.WITH;
         }else if(isInteger(lexeme)){
             token = TokenCodes.NUMLIT;
-        } else {
+        } else if(!notUnknown(lexeme)) {
+            token = TokenCodes.UNKNKOWN;
+        }else {
             token = TokenCodes.IDENT;
         }
-
-
         return token;
+    }
 
+    private boolean notUnknown(String lexeme) {
+
+        Pattern letter = Pattern.compile("[a-zA-z]");
+        Pattern digit = Pattern.compile("[0-9]");
+        Pattern special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]~-]");
+
+        Matcher hasLetter = letter.matcher(lexeme);
+        Matcher hasDigit = digit.matcher(lexeme);
+        Matcher hasSpecial = special.matcher(lexeme);
+
+        return hasLetter.find() && hasDigit.find() && hasSpecial.find();
     }
 
     public static boolean isInteger(String i) {

@@ -11,7 +11,7 @@ public class Token {
     void print (){
         System.out.print("Lexeme: '"+lexeme+"'" );
         for (int i=0 ; i<=12-lexeme.length();i++){System.out.print(" ");}
-        System.out.print(" TokenCode: " + tokenCode);
+        System.out.print(" Reserved Word: " + tokenCode);
         System.out.println();
     }
 
